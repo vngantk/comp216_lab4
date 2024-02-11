@@ -54,19 +54,24 @@ class StudentSurveyForm(Frame):
         Label(self, text="Courses:").grid(row=row, column=0, sticky="nw", padx=0, pady=2)
         self.course_checked = {}
         for i, (code, name) in enumerate(COURSE_DICT.items()):
+            # My version of Tkinter running on Mac OS X does not work well with StringVar with onvalue and offvalue
+            # so I use BooleanVar instead
             checked = BooleanVar(value=False)
             Checkbutton(self, text=name, onvalue=True, offvalue=False, variable=checked).grid(row=row, column=1, sticky="w", padx=0, pady=2)
             self.course_checked[code] = checked
             row += 1
 
         # Buttons
-        Button(self, text="Reset", command=self.reset).grid(row=row, column=0, pady=5, sticky="sew")
-        Button(self, text="Ok", command=self.ok).grid(row=row, column=1, pady=5, sticky="sew")
+        Button(self, text="Reset", command=self.reset_form).grid(row=row, column=0, pady=5, sticky="sew")
+        Button(self, text="Ok", command=self.show_info).grid(row=row, column=1, pady=5, sticky="sew")
         Button(self, text="Exit", command=self.quit).grid(row=row, column=2, pady=5, sticky="sew")
         row += 1
-        self.reset()
+        self.reset_form()
 
-    def reset(self):
+    def reset_form(self):
+        """
+        Reset the form to default values
+        """
         self.username_entry.delete(0, END)
         self.username_entry.insert(0, "Tsang Kwong Ngan")
         self.residency_var.set("intl")
@@ -74,7 +79,10 @@ class StudentSurveyForm(Frame):
         for code in COURSE_DICT.keys():
             self.course_checked[code].set(False)
 
-    def ok(self):
+    def show_info(self):
+        """
+        Show the form information in a messagebox
+        """
         username = self.username_entry.get()
         residency = self.residency_var.get()
         program = self.program_combobox.get()
@@ -87,4 +95,6 @@ class StudentSurveyForm(Frame):
             message=username + "\n" + program + "\n" + residency + "\n" + "(" + ",".join(courses) + ")")
 
 
-StudentSurveyForm().mainloop()
+if __name__ == "__main__":
+    StudentSurveyForm().mainloop()
+
